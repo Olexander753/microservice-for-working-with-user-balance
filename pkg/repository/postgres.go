@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// функци подключения к базе данных postgres, возращает указатель на sqlx.DB и ошибку
 func NewPostgresBD(cfg *config.Config) (*sqlx.DB, error) {
 	log.Println("Connect to postgres db")
 	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",

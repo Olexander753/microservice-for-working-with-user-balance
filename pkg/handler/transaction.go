@@ -10,13 +10,17 @@ import (
 )
 
 func (h *Handler) getHistory(c *gin.Context) {
+	// считывание входных данных
 	id := c.Param("id")
+	// вызыв метода чтения данных из бд
 	transactions, err := h.services.Transaction.GetHistory(id)
+	// если в ходе чтения из бд произошла ошибка то отправляем ее в ответ
 	if err != nil {
 		msg := fmt.Sprintf("error get history: %v", err)
 		log.Println(msg)
 		c.JSON(http.StatusBadGateway, msg) //TODO
 	} else {
+		// если все прошло хорошо, то в ответе отправляем id пользователя и его текущий баланс
 		c.JSON(http.StatusOK, map[string]interface{}{
 			"user id":    id,
 			"Транзакции": transactions,
@@ -27,21 +31,25 @@ func (h *Handler) getHistory(c *gin.Context) {
 func (h *Handler) transaction(c *gin.Context) {
 	var input schema.Transaction
 
+	// считывание входных данных, если ошибка отправляем ее в ответ
 	if err := c.BindJSON(&input); err != nil {
 		msg := fmt.Sprintf("error bad input transaction data: %v", err)
 		log.Println(msg)
 		c.JSON(http.StatusBadGateway, msg) //TODO
 	} else {
+		// вызов метода изменения и записи данных в бд
 		output, err := h.services.Transaction.Transaction(input)
+		// если в ходе изменения данных в бд произошла ошибка то отправляем ее в ответ
 		if err != nil {
 			msg := fmt.Sprintf("error transaction: %s", err)
 			log.Println(msg)
 			c.JSON(http.StatusBadGateway, msg) //TODO
 		} else {
+			// если все прошло хорошо, то в ответе отправляем сообщение, id пользователя и его текущий баланс
 			c.JSON(http.StatusOK, map[string]interface{}{
 				"message": "Педевод успешно выполене",
 				"user id": output.Id,
-				"amount":  output.Amount,
+				"amount":  fmt.Sprintf("%v RUB", output.Amount),
 			})
 		}
 	}

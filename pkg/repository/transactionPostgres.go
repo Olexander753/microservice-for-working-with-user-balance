@@ -8,26 +8,33 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// структура TransactionPostgres, включает в себя sqlx.DB
 type TransactionPostgres struct {
 	db *sqlx.DB
 }
 
+// констурктор для структуры TransactionPostgres, принимает sqlx.DB, возвращяет экземпляр структуры TransactionPostgres
 func NewTransactionPostgres(db *sqlx.DB) *TransactionPostgres {
 	return &TransactionPostgres{db: db}
 }
 
+// реализация интерфейса Transaction
+// функция получения истории операций с балансом пользователя
 func (t *TransactionPostgres) GetHistory(id string) ([]schema.Transaction, error) {
 	var transactions []schema.Transaction
 
+	// считывание данных из бд
 	query := fmt.Sprintln("SELECT * FROM Transactions WHERE recipient = $1")
 	err := t.db.Select(
 		&transactions,
 		query,
 		id)
 
+	// возвращем слайс экземпляров стуктуры Transaction и ошибку, при успеном считвании она нил
 	return transactions, err
 }
 
+// функция перевода денег между пользователями
 func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schema.Balance, error) {
 	var balance_sender, balance_recipient schema.Balance
 
@@ -38,6 +45,7 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 		query,
 		transaction.Sender)
 
+	// если ошибка то возвращается пустая структура и ошибка
 	if err != nil {
 		log.Println(err)
 		return balance_sender, err
@@ -45,7 +53,7 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 
 	// проверка на наличие средств для перевода
 	if balance_sender.Amount < transaction.Amount {
-		return balance_sender, fmt.Errorf("Недостаточно средств для перевода!")
+		return balance_sender, fmt.Errorf("Недостаточно средств для перевода")
 	}
 
 	//проверка на наличие получателя в базе
@@ -55,6 +63,7 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 		query,
 		transaction.Recipient)
 
+	// если ошибка то возвращается пустая структура и ошибка
 	if err != nil {
 		log.Println(err)
 		return balance_sender, err
@@ -67,20 +76,23 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 		balance_sender.Amount-transaction.Amount,
 		transaction.Sender)
 
+	// если ошибка то возвращается пустая структура и ошибка
 	if err = row.Err(); err != nil {
 		log.Println(err)
 		return balance_sender, err
 	}
 
 	//записываем данную операцию в таблицу транзакций
-	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation) VALUES($1, $2, $3, $4);")
+	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation, date_) VALUES($1, $2, $3, $4, $5);")
 	row = t.db.QueryRow(
 		query,
 		transaction.Sender,
 		"''",
 		balance_sender.Amount-transaction.Amount,
-		fmt.Sprintf("'Transaction write-off %v'", transaction.Amount))
+		fmt.Sprintf("'Transaction write-off %v RUB'", transaction.Amount),
+		"NOW()")
 
+	// если ошибка то возвращается пустая структура и ошибка
 	if err = row.Err(); err != nil {
 		log.Println(err)
 	}
@@ -92,20 +104,23 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 		balance_recipient.Amount+transaction.Amount,
 		transaction.Recipient)
 
+	// если ошибка то возвращается пустая структура и ошибка
 	if err = row.Err(); err != nil {
 		log.Println(err)
 		return balance_sender, err
 	}
 
 	//записываем данную операцию в таблицу транзакций
-	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation) VALUES($1, $2, $3, $4);")
+	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation, date_) VALUES($1, $2, $3, $4, $5);")
 	row = t.db.QueryRow(
 		query,
 		transaction.Recipient,
 		transaction.Sender,
 		balance_recipient.Amount+transaction.Amount,
-		fmt.Sprintf("'Transaction replenishment %v'", transaction.Amount))
+		fmt.Sprintf("'Transaction replenishment %v RUB'", transaction.Amount),
+		"NOW()")
 
+	// если ошибка то возвращается пустая структура и ошибка
 	if err = row.Err(); err != nil {
 		log.Println(err)
 	}

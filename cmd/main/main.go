@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	// read confid file
 	gin.SetMode(gin.ReleaseMode)
 	cfg := config.GetConfig()
 
@@ -23,8 +24,13 @@ func main() {
 		log.Fatal("Failed connect to postgres, error: ", err)
 	}
 
+	//create repository
 	repo := repository.NewRepository(db)
+
+	//create service
 	services := service.NewService(repo)
+
+	//create handler
 	handlers := handler.NewHandler(services)
 
 	//create http router

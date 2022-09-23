@@ -7,4 +7,5 @@ CREATE TABLE Transactions(
     recipient   VARCHAR(256) REFERENCES Users(id) NOT NULL,
     sender      VARCHAR(256) NOT NULL,
 	amount      int NOT NULL,
-    operation   VARCHAR(256) NOT NULL);
+    operation   VARCHAR(256) NOT NULL,
+    date_       TIMESTAMP NOT NULL);

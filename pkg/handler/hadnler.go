@@ -5,17 +5,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// структура Handler, включает в себя services
 type Handler struct {
 	services *service.Service
 }
 
+// констуктор для структуры Handler, принимает services и возвращает указатель на экземпляр структуры Handler
 func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
+// функция инициализации роутера
 func (h *Handler) InutRoutes() *gin.Engine {
 	router := gin.New()
 
+	// прописывание пути для каждого используюемого метода протокола HTTP
 	api := router.Group("/api")
 	{
 		api.POST("/", h.replenishment)         //пополнение средств

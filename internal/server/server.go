@@ -9,10 +9,12 @@ import (
 	"github.com/Olexander753/microservice-for-working-with-user-balance/internal/config"
 )
 
+// server strucrt
 type Server struct {
 	htppServer *http.Server
 }
 
+// func start server
 func (s *Server) Run(cfg *config.Config, handler http.Handler) error {
 	log.Println("Run server")
 	s.htppServer = &http.Server{
@@ -25,6 +27,7 @@ func (s *Server) Run(cfg *config.Config, handler http.Handler) error {
 	return s.htppServer.ListenAndServe()
 }
 
+// func stop working server
 func (s *Server) Shutdown(ctx context.Context) error {
 	return s.htppServer.Shutdown(ctx)
 }
