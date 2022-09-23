@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 
 	"github.com/Olexander753/microservice-for-working-with-user-balance/internal/schema"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 func (h *Handler) getHistory(c *gin.Context) {
 	// считывание входных данных
 	id := c.Param("id")
+	sort_ := c.Param("sort")
 	// вызыв метода чтения данных из бд
 	transactions, err := h.services.Transaction.GetHistory(id)
 	// если в ходе чтения из бд произошла ошибка то отправляем ее в ответ
@@ -20,6 +22,34 @@ func (h *Handler) getHistory(c *gin.Context) {
 		log.Println(msg)
 		c.JSON(http.StatusBadGateway, msg) //TODO
 	} else {
+		// сортировка списка операций
+		switch sort_ {
+		case "date<":
+			sort.Slice(transactions, func(i, j int) (less bool) {
+				return transactions[i].Date < transactions[j].Date
+			})
+		case "date>":
+			sort.Slice(transactions, func(i, j int) (less bool) {
+				return transactions[i].Date > transactions[j].Date
+			})
+		case "amount<":
+			sort.Slice(transactions, func(i, j int) (less bool) {
+				return transactions[i].Amount < transactions[j].Amount
+			})
+		case "amount>":
+			sort.Slice(transactions, func(i, j int) (less bool) {
+				return transactions[i].Amount > transactions[j].Amount
+			})
+		case "balance<":
+			sort.Slice(transactions, func(i, j int) (less bool) {
+				return transactions[i].Balance < transactions[j].Balance
+			})
+		case "balance>":
+			sort.Slice(transactions, func(i, j int) (less bool) {
+				return transactions[i].Balance > transactions[j].Balance
+			})
+		}
+
 		// если все прошло хорошо, то в ответе отправляем id пользователя и его текущий баланс
 		c.JSON(http.StatusOK, map[string]interface{}{
 			"user id":    id,

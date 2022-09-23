@@ -22,11 +22,12 @@ func (h *Handler) InutRoutes() *gin.Engine {
 	// прописывание пути для каждого используюемого метода протокола HTTP
 	api := router.Group("/api")
 	{
-		api.POST("/", h.replenishment)         //пополнение средств
-		api.GET("/:id", h.getBalance)          //проверка баланса по ID пользователя
-		api.GET("/history/:id", h.getHistory)  //получение истории транзакций по ID пользователя
-		api.PUT("/write-off", h.writeOff)      //списание средст
-		api.PUT("/transaction", h.transaction) //перевод средст
+		api.POST("/", h.replenishment)              //пополнение средств
+		api.GET("/:id", h.getBalance)               //проверка баланса по ID пользователя
+		api.GET("/history/:id/", h.getHistory)      //получение истории транзакций по ID пользователя
+		api.GET("/history/:id/:sort", h.getHistory) //получение истории транзакций по ID пользователя c сортрировкой
+		api.PUT("/write-off", h.writeOff)           //списание средст
+		api.PUT("/transaction", h.transaction)      //перевод средст
 	}
 	return router
 }

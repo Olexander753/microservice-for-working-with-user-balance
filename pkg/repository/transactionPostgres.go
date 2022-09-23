@@ -83,13 +83,14 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 	}
 
 	//записываем данную операцию в таблицу транзакций
-	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation, date_) VALUES($1, $2, $3, $4, $5);")
+	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, balance, amount, operation, date_) VALUES($1, $2, $3, $4, $5, $6);")
 	row = t.db.QueryRow(
 		query,
 		transaction.Sender,
 		"''",
 		balance_sender.Amount-transaction.Amount,
-		fmt.Sprintf("'Transaction write-off %v RUB'", transaction.Amount),
+		transaction.Amount,
+		"'Transaction write-off'",
 		"NOW()")
 
 	// если ошибка то возвращается пустая структура и ошибка
@@ -104,20 +105,21 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 		balance_recipient.Amount+transaction.Amount,
 		transaction.Recipient)
 
-	// если ошибка то возвращается пустая структура и ошибка
-	if err = row.Err(); err != nil {
+	// считывание записанного баланса, если ошибка, то возвращем ее и пустую структуру
+	if err = row.Scan(&balance_sender.Amount); err != nil {
 		log.Println(err)
 		return balance_sender, err
 	}
 
 	//записываем данную операцию в таблицу транзакций
-	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation, date_) VALUES($1, $2, $3, $4, $5);")
+	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, balance, amount, operation, date_) VALUES($1, $2, $3, $4, $5, $6);")
 	row = t.db.QueryRow(
 		query,
 		transaction.Recipient,
 		transaction.Sender,
-		balance_recipient.Amount+transaction.Amount,
-		fmt.Sprintf("'Transaction replenishment %v RUB'", transaction.Amount),
+		balance_recipient.Amount,
+		transaction.Amount,
+		"'Transaction replenishment'",
 		"NOW()")
 
 	// если ошибка то возвращается пустая структура и ошибка

@@ -31,8 +31,6 @@ func (b *BalancePostgres) Replenishment(replenishment schema.Balance) (schema.Ba
 		query,
 		replenishment.Id)
 
-	fmt.Println(replenishment.Amount)
-
 	// если запись о пользователе отсутствует в бд, то записываем в таблицы данные
 	if err == sql.ErrNoRows {
 		// запись данных о пользователе в таблицу Users
@@ -49,13 +47,14 @@ func (b *BalancePostgres) Replenishment(replenishment schema.Balance) (schema.Ba
 		}
 
 		// запись данных о пополнении в таблицу Transactions
-		query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation, date_) VALUES($1, $2, $3, $4, $5);")
+		query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, balance, amount, operation, date_) VALUES($1, $2, $3, $4, $5, $6);")
 		row = b.db.QueryRow(
 			query,
 			replenishment.Id,
 			"'Bank'",
 			replenishment.Amount,
-			fmt.Sprintf("'Replenishment %v RUB'", replenishment.Amount),
+			replenishment.Amount,
+			"'Replenishment'",
 			"NOW()")
 		// проверка на ошибки
 		if err = row.Err(); err != nil {
@@ -83,12 +82,13 @@ func (b *BalancePostgres) Replenishment(replenishment schema.Balance) (schema.Ba
 		}
 
 		// запись данных о пополнении в таблицу Transactions
-		query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation, date_) VALUES($1, $2, $3, $4, $5);")
+		query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, balance, amount, operation, date_) VALUES($1, $2, $3, $4, $5, $6);")
 		row = b.db.QueryRow(
 			query,
 			replenishment.Id, "'Bank'",
 			balance.Amount,
-			fmt.Sprintf("'Replenishment %v RUB'", replenishment.Amount),
+			replenishment.Amount,
+			"'Replenishment'",
 			"NOW()")
 
 		// проверка на ошибки
@@ -151,13 +151,14 @@ func (b *BalancePostgres) WriteOff(writeOff schema.Balance) (schema.Balance, err
 	}
 
 	// запись данных о пополнении в таблицу Transactions
-	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, amount, operation, date_) VALUES($1, $2, $3, $4, $5);")
+	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, balance, amount, operation, date_) VALUES($1, $2, $3, $4, $5, $6);")
 	row = b.db.QueryRow(
 		query,
 		writeOff.Id,
 		"'Bank'",
 		balance.Amount,
-		fmt.Sprintf("'Write-off %v RUB'", writeOff.Amount),
+		writeOff.Amount,
+		"'Write-off'",
 		"NOW()")
 
 	// проверка на наличие ошибки
