@@ -13,7 +13,7 @@ func NewTansctionService(repo repository.Transaction) *TansctionService {
 	return &TansctionService{repo: repo}
 }
 
-func (s *TansctionService) GetHistory(id int) ([]schema.Transaction, error) {
+func (s *TansctionService) GetHistory(id string) ([]schema.Transaction, error) {
 	return s.repo.GetHistory(id)
 }
 

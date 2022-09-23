@@ -7,12 +7,12 @@ import (
 
 type Balance interface {
 	Replenishment(replenishment schema.Balance) (schema.Balance, error)
-	GetBalance(id int) (schema.Balance, error)
+	GetBalance(id string) (schema.Balance, error)
 	WriteOff(writeOff schema.Balance) (schema.Balance, error)
 }
 
 type Transaction interface {
-	GetHistory(id int) ([]schema.Transaction, error)
+	GetHistory(id string) ([]schema.Transaction, error)
 	Transaction(transaction schema.Transaction) (schema.Balance, error)
 }
 

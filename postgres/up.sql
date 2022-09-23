@@ -1,12 +1,10 @@
 CREATE TABLE Users(
-	id 	    INT PRIMARY KEY,
-	amount INT NOT NULL);
+	id 	    VARCHAR(256) PRIMARY KEY,
+	amount  INT NOT NULL);
 
 CREATE TABLE Transactions(
     id 	        SERIAL PRIMARY KEY,
-    recipient   int REFERENCES Users(id) NOT NULL,
-    sender      int REFERENCES Users(id),
-	amount      int NOT NULL);
-
-
-    
+    recipient   VARCHAR(256) REFERENCES Users(id) NOT NULL,
+    sender      VARCHAR(256) NOT NULL,
+	amount      int NOT NULL,
+    operation   VARCHAR(256) NOT NULL);

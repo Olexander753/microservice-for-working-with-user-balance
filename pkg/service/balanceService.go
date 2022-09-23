@@ -17,7 +17,7 @@ func (s *BalanceService) Replenishment(replenishment schema.Balance) (schema.Bal
 	return s.repo.Replenishment(replenishment)
 }
 
-func (s *BalanceService) GetBalance(id int) (schema.Balance, error) {
+func (s *BalanceService) GetBalance(id string) (schema.Balance, error) {
 	return s.repo.GetBalance(id)
 }
 

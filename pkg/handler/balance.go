@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/Olexander753/microservice-for-working-with-user-balance/internal/schema"
 	"github.com/gin-gonic/gin"
@@ -14,7 +13,7 @@ func (h *Handler) replenishment(c *gin.Context) {
 	var input schema.Balance
 
 	if err := c.BindJSON(&input); err != nil {
-		msg := fmt.Sprintf("error bad input replenishment data: %e", err)
+		msg := fmt.Sprintf("error bad input replenishment data: %v", err)
 		log.Println(msg)
 		c.JSON(http.StatusBadGateway, msg) //TODO
 	} else {
@@ -35,23 +34,17 @@ func (h *Handler) replenishment(c *gin.Context) {
 }
 
 func (h *Handler) getBalance(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id := c.Param("id")
+	output, err := h.services.Balance.GetBalance(id)
 	if err != nil {
-		msg := fmt.Sprintf("error bad input id: %e", err)
+		msg := fmt.Sprintf("error get balance: %v", err)
 		log.Println(msg)
 		c.JSON(http.StatusBadGateway, msg) //TODO
 	} else {
-		output, err := h.services.Balance.GetBalance(id)
-		if err != nil {
-			msg := fmt.Sprintf("error get balance: %e", err)
-			log.Println(msg)
-			c.JSON(http.StatusBadGateway, msg) //TODO
-		} else {
-			c.JSON(http.StatusOK, map[string]int{
-				"id":      id,
-				"balance": output.Amount,
-			})
-		}
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"id":      id,
+			"balance": output.Amount,
+		})
 	}
 
 }
@@ -60,13 +53,13 @@ func (h *Handler) writeOff(c *gin.Context) {
 	var input schema.Balance
 
 	if err := c.BindJSON(&input); err != nil {
-		msg := fmt.Sprintf("error bad input writeOff data: %e", err)
+		msg := fmt.Sprintf("error bad input writeOff data: %v", err)
 		log.Println(msg)
 		c.JSON(http.StatusBadGateway, msg) //TODO
 	} else {
 		output, err := h.services.Balance.WriteOff(input)
 		if err != nil {
-			msg := fmt.Sprintf("error get balance: %e", err)
+			msg := fmt.Sprintf("error get balance: %v", err)
 			log.Println(msg)
 			c.JSON(http.StatusBadGateway, msg) //TODO
 		} else {
