@@ -24,7 +24,11 @@ func (h *Handler) replenishment(c *gin.Context) {
 			log.Println(msg)
 			c.JSON(http.StatusBadGateway, msg) //TODO
 		} else {
-			c.JSON(http.StatusOK, fmt.Sprintf("Баланс %v успешно пополнен на сумма %v. Текущий баланс %v", input.Id, input.Amount, output.Amount))
+			c.JSON(http.StatusOK, map[string]interface{}{
+				"message": fmt.Sprintf("Баланс успешно пополнен на сумма %v.", input.Amount),
+				"user id": output.Id,
+				"amount":  output.Amount,
+			})
 		}
 	}
 
@@ -66,9 +70,10 @@ func (h *Handler) writeOff(c *gin.Context) {
 			log.Println(msg)
 			c.JSON(http.StatusBadGateway, msg) //TODO
 		} else {
-			message := fmt.Sprintf("Средства успешно списаны на сумму %v. Текущий баланс %v", input.Amount, output.Amount)
 			c.JSON(http.StatusOK, map[string]interface{}{
-				"message": message,
+				"message": fmt.Sprintf("Средства успешно списаны на сумму %v.", input.Amount),
+				"user id": output.Id,
+				"amount":  output.Amount,
 			})
 		}
 	}
