@@ -1,5 +1,6 @@
 postgres: 
-  host: 0.0.0.0
+  # host: host.docker.internal
+  host: loacalhost
   port: 5434
   user: postgres
   password: qwe
