@@ -8,19 +8,24 @@ import (
 )
 
 type Balance interface {
-	GetHistory(ctx context.Context, id int) ([]schema.Transaction, error)
 	Replenishment(ctx context.Context, replenishment schema.Balance) (schema.Balance, error)
 	GetBalance(ctx context.Context, id int) (schema.Balance, error)
 	WriteOff(ctx context.Context, writeOff schema.Balance) (schema.Balance, error)
+}
+
+type Transaction interface {
+	GetHistory(ctx context.Context, id int) ([]schema.Transaction, error)
 	Transaction(ctx context.Context, transaction schema.Transaction) (schema.Balance, error)
 }
 
 type Repository struct {
 	Balance
+	Transaction
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		Balance: NewBalancePostgres(db),
+		Balance:     NewBalancePostgres(db),
+		Transaction: NewTransactionPostgres(db),
 	}
 }
