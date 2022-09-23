@@ -20,7 +20,8 @@ func (h *Handler) getHistory(c *gin.Context) {
 	if err != nil {
 		msg := fmt.Sprintf("error get history: %v", err)
 		log.Println(msg)
-		c.JSON(http.StatusBadGateway, msg) //TODO
+		// ответ со статусом 400 (некорректный запрос) и сообщением
+		c.JSON(http.StatusBadRequest, msg)
 	} else {
 		// сортировка списка операций
 		switch sort_ {
@@ -50,7 +51,7 @@ func (h *Handler) getHistory(c *gin.Context) {
 			})
 		}
 
-		// если все прошло хорошо, то в ответе отправляем id пользователя и его текущий баланс
+		// если все прошло хорошо, то в ответе отправляем статус 200 (ОК) id пользователя и его текущий баланс
 		c.JSON(http.StatusOK, map[string]interface{}{
 			"user id":    id,
 			"Транзакции": transactions,
@@ -65,7 +66,8 @@ func (h *Handler) transaction(c *gin.Context) {
 	if err := c.BindJSON(&input); err != nil {
 		msg := fmt.Sprintf("error bad input transaction data: %v", err)
 		log.Println(msg)
-		c.JSON(http.StatusBadGateway, msg) //TODO
+		// ответ со статусом 400 (некорректный запрос) и сообщением
+		c.JSON(http.StatusBadRequest, msg)
 	} else {
 		// вызов метода изменения и записи данных в бд
 		output, err := h.services.Transaction.Transaction(input)
@@ -73,9 +75,10 @@ func (h *Handler) transaction(c *gin.Context) {
 		if err != nil {
 			msg := fmt.Sprintf("error transaction: %s", err)
 			log.Println(msg)
-			c.JSON(http.StatusBadGateway, msg) //TODO
+			// ответ со статусом 400 (некорректный запрос) и сообщением
+			c.JSON(http.StatusBadRequest, msg)
 		} else {
-			// если все прошло хорошо, то в ответе отправляем сообщение, id пользователя и его текущий баланс
+			// если все прошло хорошо, то в ответе отправляем статус 200 (ОК), сообщение, id пользователя и его текущий баланс
 			c.JSON(http.StatusOK, map[string]interface{}{
 				"message": "Педевод успешно выполене",
 				"user id": output.Id,

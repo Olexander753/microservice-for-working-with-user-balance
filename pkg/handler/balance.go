@@ -17,7 +17,8 @@ func (h *Handler) replenishment(c *gin.Context) {
 	if err := c.BindJSON(&input); err != nil {
 		msg := fmt.Sprintf("error bad input replenishment data: %v", err)
 		log.Println(msg)
-		c.JSON(http.StatusBadGateway, msg) //TODO
+		// ответ со статусом 400 (некорректный запрос) и сообщением
+		c.JSON(http.StatusBadRequest, msg)
 	} else {
 		// вызов метода записи в бд данных
 		output, err := h.services.Balance.Replenishment(input)
@@ -25,7 +26,8 @@ func (h *Handler) replenishment(c *gin.Context) {
 		if err != nil {
 			msg := fmt.Sprintf("error replenishment: %e", err)
 			log.Println(msg)
-			c.JSON(http.StatusBadGateway, msg) //TODO
+			// ответ со статусом 400 (некорректный запрос) и сообщением
+			c.JSON(http.StatusBadRequest, msg)
 		} else {
 			// если все прошло хорошо, то в ответе отправляем сообщение, id пользователя и его текущий баланс
 			c.JSON(http.StatusOK, map[string]interface{}{
@@ -47,7 +49,8 @@ func (h *Handler) getBalance(c *gin.Context) {
 	if err != nil {
 		msg := fmt.Sprintf("error get balance: %v", err)
 		log.Println(msg)
-		c.JSON(http.StatusBadGateway, msg) //TODO
+		// ответ со статусом 400 (некорректный запрос) и сообщением
+		c.JSON(http.StatusBadRequest, msg)
 	} else {
 		// если все прошло хорошо, то в ответе отправляем id пользователя и его текущий баланс
 		c.JSON(http.StatusOK, map[string]interface{}{
@@ -65,7 +68,8 @@ func (h *Handler) writeOff(c *gin.Context) {
 	if err := c.BindJSON(&input); err != nil {
 		msg := fmt.Sprintf("error bad input writeOff data: %v", err)
 		log.Println(msg)
-		c.JSON(http.StatusBadGateway, msg) //TODO
+		// ответ со статусом 400 (некорректный запрос) и сообщением
+		c.JSON(http.StatusBadRequest, msg)
 	} else {
 		// вызов метода изменения и записи данных в бд
 		output, err := h.services.Balance.WriteOff(input)
@@ -73,9 +77,10 @@ func (h *Handler) writeOff(c *gin.Context) {
 		if err != nil {
 			msg := fmt.Sprintf("error get balance: %v", err)
 			log.Println(msg)
-			c.JSON(http.StatusBadGateway, msg) //TODO
+			// ответ со статусом 400 (некорректный запрос) и сообщением
+			c.JSON(http.StatusBadRequest, msg)
 		} else {
-			// если все прошло хорошо, то в ответе отправляем сообщение, id пользователя и его текущий баланс
+			// если все прошло хорошо, то в ответе отправляем статус 200 (ОК), сообщение, id пользователя и его текущий баланс
 			c.JSON(http.StatusOK, map[string]interface{}{
 				"message": fmt.Sprintf("Средства успешно списаны на сумму %v.", input.Amount),
 				"user id": output.Id,
