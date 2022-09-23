@@ -10,6 +10,7 @@ import (
 	"github.com/Olexander753/microservice-for-working-with-user-balance/pkg/repository"
 	"github.com/Olexander753/microservice-for-working-with-user-balance/pkg/service"
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 )
 
 func main() {
