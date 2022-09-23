@@ -2,13 +2,13 @@ package schema
 
 // для поплнения, списания, проверки баланса
 type Balance struct {
-	Id  int `json:"id"`
-	Sum int `json:"sum"`
+	Id     int `json:"id"`
+	Amount int `json:"amount"`
 }
 
 // для перевода и проверки истории
 type Transaction struct {
 	Sender    int `json:"sender"`
 	Recipient int `json:"recipient"`
-	Sum       int `json:"sum"`
+	Amount    int `json:"amount"`
 }
