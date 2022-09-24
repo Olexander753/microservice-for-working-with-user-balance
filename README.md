@@ -60,8 +60,8 @@ URL - localhost:8080/api/transaction;
    "amount": 400
 }.
 4. Метод получения текущего баланса пользователя:
--метод - GET;
--URL - localhost:8080/api/z (z - id пользователя).
+- метод - GET;
+- URL - localhost:8080/api/z (z - id пользователя).
 5. Метод получения списка операций:
 -метод - GET;
 -URL - localhost:8080/api/history/z (z - id пользователя).
