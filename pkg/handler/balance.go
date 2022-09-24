@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Olexander753/microservice-for-working-with-user-balance/internal/convert"
 	"github.com/Olexander753/microservice-for-working-with-user-balance/internal/schema"
 	"github.com/gin-gonic/gin"
 )
@@ -53,9 +54,39 @@ func (h *Handler) getBalance(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, msg)
 	} else {
 		// если все прошло хорошо, то в ответе отправляем id пользователя и его текущий баланс
+		output.Currency = "RUB"
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"id":       id,
+			"balance":  output.Amount,
+			"currency": output.Currency, //TODO
+		})
+	}
+
+}
+
+func (h *Handler) convertBalance(c *gin.Context) {
+	id := c.Param("id")
+	currency := c.Param("valute")
+
+	output, err := h.services.Balance.GetBalance(id)
+	if err != nil {
+		msg := fmt.Sprintf("error get convert balance: %v", err)
+		log.Println(msg)
+		// ответ со статусом 400 (некорректный запрос) и сообщением
+		c.JSON(http.StatusBadRequest, msg)
+	} else {
+		output, err := convert.Convert(output, currency)
+		if err != nil {
+			msg := fmt.Sprintf("error get convert balance: %v", err)
+			log.Println(msg)
+			// ответ со статусом 400 (некорректный запрос) и сообщением
+			c.JSON(http.StatusBadRequest, msg)
+		}
+		// если все прошло хорошо, то в ответе отправляем id пользователя и его текущий баланс
 		c.JSON(http.StatusOK, map[string]interface{}{
 			"id":      id,
-			"balance": fmt.Sprintf("%v RUB", output.Amount),
+			"balance": output.Amount,
+			"valute":  output.Currency,
 		})
 	}
 

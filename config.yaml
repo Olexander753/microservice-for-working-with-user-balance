@@ -1,6 +1,6 @@
 postgres: 
-  host: host.docker.internal
-  # host: localhost
+  # host: host.docker.internal
+  host: localhost
   port: 5434
   user: postgres
   password: qwe
@@ -8,3 +8,5 @@ postgres:
   sslmode: disable
 server:
   port: 8080
+convertAPI:
+  apikey: AzPSIhTfhoRNnPXP8ytMZCSWorL1kFzw

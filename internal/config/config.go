@@ -19,6 +19,9 @@ type Config struct {
 	Server struct {
 		Port string `yaml:"port"`
 	} `yaml:"server"`
+	ConvertAPI struct {
+		Apikey string `yaml:"apikey"`
+	} `yaml:"convertAPI"`
 }
 
 var instance *Config
