@@ -86,8 +86,8 @@ func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schem
 	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, balance, amount, operation, date_) VALUES($1, $2, $3, $4, $5, $6);")
 	row = t.db.QueryRow(
 		query,
+		transaction.Recipient,
 		transaction.Sender,
-		"''",
 		balance_sender.Amount-transaction.Amount,
 		transaction.Amount,
 		"'Transaction write-off'",
