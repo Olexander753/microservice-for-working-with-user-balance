@@ -35,25 +35,25 @@
 
 Примеры HTTP запросов:
 1. Начисление средств на баланс:
-метод - POST;
-URL - localhost:8080/api;
-тело запроса - 
+- метод - POST;
+- URL - localhost:8080/api;
+- тело запроса - 
 {
     "id": "z",
     "amount": 7654
 }.
 2. Метод списания средств с баланса: 
-метод - PUT;
-URL - localhost:8080/api/write-off;
-тело запроса - 
+- метод - PUT;
+- URL - localhost:8080/api/write-off;
+- тело запроса - 
 {
     "id": "z",
     "amount": 1000
 }.
 3. Метод перевода средств от пользователя к пользователю:
-метод - PUT;
-URL - localhost:8080/api/transaction;
-тело запроса - 
+- метод - PUT;
+- URL - localhost:8080/api/transaction;
+- тело запроса - 
 {
    "sender": "z",
    "recipient": "x",
@@ -63,14 +63,14 @@ URL - localhost:8080/api/transaction;
 - метод - GET;
 - URL - localhost:8080/api/z (z - id пользователя).
 5. Метод получения списка операций:
--метод - GET;
--URL - localhost:8080/api/history/z (z - id пользователя).
+- метод - GET;
+- URL - localhost:8080/api/history/z (z - id пользователя).
 6. Метод получения сортированного списка операций, сортировка зависит от последнего указанного параметра:
--метод - GET;
--URL - localhost:8080/api/history/z/amount< (z - id пользователя, amount< - способ сортировки, ниже приведены все возможные).
+- метод - GET;
+- URL - localhost:8080/api/history/z/amount< (z - id пользователя, amount< - способ сортировки, ниже приведены все возможные).
 7. Метод конвертации баланса пользователя на выбранную валюту 
--метод - GET;
--URL - localhost:8080/api/convert/z/eur (z - id пользователя, eur - валюта конвертации).
+- метод - GET;
+- URL - localhost:8080/api/convert/z/eur (z - id пользователя, eur - валюта конвертации).
 
 Варинты сортировки: 
 1. Параметр date< - по дате по возрастанию.
