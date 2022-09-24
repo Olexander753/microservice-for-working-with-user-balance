@@ -154,8 +154,8 @@ func (b *BalancePostgres) WriteOff(writeOff schema.Balance) (schema.Balance, err
 	query = fmt.Sprintln("INSERT INTO Transactions(recipient, sender, balance, amount, operation, date_) VALUES($1, $2, $3, $4, $5, $6);")
 	row = b.db.QueryRow(
 		query,
-		writeOff.Id,
 		"'Bank'",
+		writeOff.Id,
 		balance.Amount,
 		writeOff.Amount,
 		"'Write-off'",
