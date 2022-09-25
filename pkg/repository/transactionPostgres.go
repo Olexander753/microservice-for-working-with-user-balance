@@ -38,6 +38,10 @@ func (t *TransactionPostgres) GetHistory(id string) ([]schema.Transaction, error
 func (t *TransactionPostgres) Transaction(transaction schema.Transaction) (schema.Balance, error) {
 	var balance_sender, balance_recipient schema.Balance
 
+	if transaction.Amount < 1 {
+		return balance_sender, fmt.Errorf("Error: невалидная сумма средств для пополнения баланса!")
+	}
+
 	// прверем на наличие отправителя в базе
 	query := fmt.Sprintln("SELECT * FROM Users WHERE ID = $1")
 	err := t.db.Get(

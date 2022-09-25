@@ -24,6 +24,10 @@ func NewBalancePostgres(db *sqlx.DB) *BalancePostgres {
 func (b *BalancePostgres) Replenishment(replenishment schema.Balance) (schema.Balance, error) {
 	var balance schema.Balance
 
+	if replenishment.Amount < 1 {
+		return balance, fmt.Errorf("Error: невалидная сумма средств для пополнения баланса!")
+	}
+
 	// проверяем наличие данного пользователя в базе даннх
 	query := fmt.Sprintln("SELECT * FROM Users WHERE ID = $1")
 	err := b.db.Get(
@@ -118,6 +122,10 @@ func (b *BalancePostgres) GetBalance(id string) (schema.Balance, error) {
 // функция списаниея средст с баланса пользователя
 func (b *BalancePostgres) WriteOff(writeOff schema.Balance) (schema.Balance, error) {
 	var balance schema.Balance
+
+	if writeOff.Amount < 1 {
+		return balance, fmt.Errorf("Error: невалидная сумма для списания средств с баланса!")
+	}
 
 	// считывание данных о пользователе
 	query := fmt.Sprintln("SELECT * FROM Users WHERE ID = $1")
