@@ -1,12 +1,12 @@
 postgres: 
-  # host: host.docker.internal
-  host: localhost
-  port: 5434
-  user: postgres
-  password: qwe
-  db: postgres
-  sslmode: disable
+  # host: host.docker.internal              # адрес хоста базы данных для за пуска в контейнере с базой данных 
+  host: localhost                           # адрес хоста базы данных для запуска не в контейнере
+  port: 5434                                # порт подключения к базе данных
+  user: postgres                            # адрес хоста базы данных для запуска не в контейнере
+  password: qwe                             # адрес хоста базы данных для запуска не в контейнере
+  db: postgres                              # адрес хоста базы данных для запуска не в контейнере
+  sslmode: disable                          # адрес хоста базы данных для запуска не в контейнере
 server:
-  port: 8080
+  port: 8080                                # адрес хоста базы данных для запуска не в контейнере
 convertAPI:
-  apikey: AzPSIhTfhoRNnPXP8ytMZCSWorL1kFzw
+  apikey: AzPSIhTfhoRNnPXP8ytMZCSWorL1kFzw  # адрес хоста базы данных для запуска не в контейнере
