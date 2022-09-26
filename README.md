@@ -96,4 +96,5 @@
 5. Параметр `balance<` - по сумме баланса по возрастанию.
 6. Параметр `balance>` - по сумме баланса по убыванию.
 
-## Документация Postman для запросов `https://documenter.getpostman.com/view/21487929/2s83RzjasV#e578ea5f-1bb2-40dd-807c-913954c01b24`
+## Документация Postman для запросов 
+https://documenter.getpostman.com/view/21487929/2s83RzjasV#e578ea5f-1bb2-40dd-807c-913954c01b24
